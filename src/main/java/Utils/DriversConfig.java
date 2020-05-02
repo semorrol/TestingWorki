@@ -36,6 +36,12 @@ public class DriversConfig {
         }
     }
 
+    public static FirefoxDriver iniFirefoxDriver(){
+        System.setProperty("webdriver.gecko.driver", "./geckodriver");
+        FirefoxDriver firefoxDriver = new FirefoxDriver();
+        return firefoxDriver;
+    }
+
     //Instance a chrome driver
     public static ChromeDriver headlessOrNot(String headless, String chromePath)
     {

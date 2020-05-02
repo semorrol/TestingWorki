@@ -1,11 +1,10 @@
-import Utils.DriversConfig;
 import Utils.TestWithConfig;
 import Utils.Utils;
 import org.ini4j.Wini;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import Utils.MyFirefoxDriver;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +17,7 @@ public class LoginWorki extends TestWithConfig {
     static String username;
     static String password;
 
+    MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
     static WebDriverWait firefoxWaiting;
 
@@ -48,8 +48,9 @@ public class LoginWorki extends TestWithConfig {
         password = commonIni.get("Login", "password");
 
         try{
-            firefoxDriver = DriversConfig.headlessOrNot(headless);
-            firefoxWaiting = new WebDriverWait(firefoxDriver, 5);
+            myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
+            firefoxDriver = myFirefoxDriver.getFirefoxDriver();
+            firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
 
             results.put("-- Login on worki  ->  ", LoginWorki());
 
@@ -57,8 +58,6 @@ public class LoginWorki extends TestWithConfig {
         } catch (Exception e){
             e.printStackTrace();
             return results;
-        } finally {
-            firefoxDriver.close();
         }
     }
 

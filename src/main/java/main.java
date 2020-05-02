@@ -1,14 +1,13 @@
+import UTType.CheckUTTYpeNameAlreadyExists;
+import UTType.EditUTType;
+import UTType.NewUTTypeByDefault;
 import Utils.Test;
 import exceptions.MissingParameterException;
-import org.ini4j.Profile;
 import org.ini4j.Wini;
 import Utils.Color;
-import org.openqa.selenium.firefox.FirefoxDriver;
-
+import Utils.MyFirefoxDriver;
 import java.io.File;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class main {
     public static void main(String[] args) {
@@ -39,9 +38,11 @@ public class main {
         Map<String, Test> tests = new HashMap<>();
 
         tests.put("loginWorki", new LoginWorki(config));
-        tests.put("newUTType", new NewUTTypeTest(config));
-        tests.put("editUTType", new EditUTTypeTest(config));
-        tests.put("deleteUTType", new DeleteUTTypeTest(config));
+        tests.put("newUTTypeByDefault", new NewUTTypeByDefault(config));
+        tests.put("checkUTTypeNameAlreadyExists", new CheckUTTYpeNameAlreadyExists(config));
+        tests.put("editUTType", new EditUTType(config));
+        /*tests.put("editUTType", new EditUTTypeTest(config));
+        tests.put("deleteUTType", new DeleteUTTypeTest(config));*/
 
         return tests;
     }
@@ -114,5 +115,7 @@ public class main {
                 System.err.println(Color.RED + "The argument: '" + testName + "' from the attribute 'testsList' on the .ini file do not match with the test suite {calls, coordinator, productivityAgents, productivityExport, oldRecordDownload}" + Color.RESET);
             }
         }
+        MyFirefoxDriver.closeDriver();
+
     }
 }
