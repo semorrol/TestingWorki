@@ -1,7 +1,10 @@
-import UTType.CheckUTTYpeNameAlreadyExists;
-import UTType.EditUTType;
-import UTType.NewUTTypeByDefault;
+import LineaDeTrabajo.NewLineaConColaborador;
+import LineaDeTrabajo.NewLineaDeTrabajo;
+import UTType.*;
+import UTs.NewUT;
 import Utils.Test;
+import Workflow.NewWorkflow;
+import Workflow.NewWorkflowConLinea;
 import exceptions.MissingParameterException;
 import org.ini4j.Wini;
 import Utils.Color;
@@ -41,6 +44,13 @@ public class main {
         tests.put("newUTTypeByDefault", new NewUTTypeByDefault(config));
         tests.put("checkUTTypeNameAlreadyExists", new CheckUTTYpeNameAlreadyExists(config));
         tests.put("editUTType", new EditUTType(config));
+        tests.put("deleteUTType", new DeleteUTTypeCheckAlert(config));
+        tests.put("editUTTypeAddingImage", new EditUTTypeAddingImage(config));
+        tests.put("newLineaTrabajo", new NewLineaDeTrabajo(config));
+        tests.put("newLineaConColaborador", new NewLineaConColaborador(config));
+        tests.put("newWorkflow", new NewWorkflow(config));
+        tests.put("newWorkflowConLinea", new NewWorkflowConLinea(config));
+        tests.put("newUT", new NewUT(config));
         /*tests.put("editUTType", new EditUTTypeTest(config));
         tests.put("deleteUTType", new DeleteUTTypeTest(config));*/
 

@@ -47,6 +47,30 @@ public class Utils {
 
         WebElement okButton = driver.findElement(By.xpath("//span[contains(., 'OK')]"));
         okButton.click();
+    }
 
+    public static void goToWorkflows(WebDriver driver, WebDriverWait waiting) {
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tn-menu/ul/li[11]/a")));
+        WebElement siteElementsButton = driver.findElement(By.xpath("//tn-menu/ul/li[11]/a"));
+        siteElementsButton.click();
+
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Tipos de UT')]")));
+        WebElement UTTypesButton = driver.findElement(By.xpath("//span[contains(., 'Workflows')]"));
+        UTTypesButton.click();
+
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Nuevo WF')]")));
+    }
+
+    public static void goToLineasDeTrabajo(WebDriver driver, WebDriverWait waiting)
+    {
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tn-menu/ul/li[11]/a")));
+        WebElement siteElementsButton = driver.findElement(By.xpath("//tn-menu/ul/li[11]/a"));
+        siteElementsButton.click();
+
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Líneas de trabajo')]")));
+        WebElement UTTypesButton = driver.findElement(By.xpath("//span[contains(., 'Líneas de trabajo')]"));
+        UTTypesButton.click();
+
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Nueva Línea de trabajo')]")));
     }
 }
