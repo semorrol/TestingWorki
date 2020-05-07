@@ -1,7 +1,12 @@
 import LineaDeTrabajo.NewLineaConColaborador;
 import LineaDeTrabajo.NewLineaDeTrabajo;
+import Login.LoginWorki;
+import Sprint.DeleteSprint;
+import Sprint.NewSprintValoresObligatorios;
 import UTType.*;
-import UTs.NewUT;
+import UTs.CheckValoresObligatorios;
+import UTs.NewUTYAbrir;
+import UTs.NewUTyNueva;
 import Utils.Test;
 import Workflow.NewWorkflow;
 import Workflow.NewWorkflowConLinea;
@@ -42,6 +47,7 @@ public class main {
 
         tests.put("loginWorki", new LoginWorki(config));
         tests.put("newUTTypeByDefault", new NewUTTypeByDefault(config));
+        tests.put("newUTTypeConLinea", new NewUTTypeConLinea(config));
         tests.put("checkUTTypeNameAlreadyExists", new CheckUTTYpeNameAlreadyExists(config));
         tests.put("editUTType", new EditUTType(config));
         tests.put("deleteUTType", new DeleteUTTypeCheckAlert(config));
@@ -50,9 +56,12 @@ public class main {
         tests.put("newLineaConColaborador", new NewLineaConColaborador(config));
         tests.put("newWorkflow", new NewWorkflow(config));
         tests.put("newWorkflowConLinea", new NewWorkflowConLinea(config));
-        tests.put("newUT", new NewUT(config));
-        /*tests.put("editUTType", new EditUTTypeTest(config));
-        tests.put("deleteUTType", new DeleteUTTypeTest(config));*/
+        tests.put("newUTYAbrir", new NewUTYAbrir(config));
+        tests.put("newUTYNueva", new NewUTyNueva(config));
+        tests.put("checkValoresObligatorios", new CheckValoresObligatorios(config));
+        tests.put("newSprintValoresObligatorios", new NewSprintValoresObligatorios(config));
+        tests.put("deleteSprint", new DeleteSprint(config));
+
 
         return tests;
     }

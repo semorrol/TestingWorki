@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.HashMap;
 import java.util.List;
 
-public class NewUT extends TestWithConfig {
+public class NewUTYAbrir extends TestWithConfig {
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -23,7 +23,7 @@ public class NewUT extends TestWithConfig {
 
     private HashMap<String, String> results = new HashMap<>();
 
-    public NewUT(Wini commonIni) {
+    public NewUTYAbrir(Wini commonIni) {
         super(commonIni);
     }
 
@@ -66,16 +66,25 @@ public class NewUT extends TestWithConfig {
             WebElement nombreUT = firefoxDriver.findElement(By.xpath("//div[span[contains(., 'Nueva Unidad de Trabajo (UT)')]]/following-sibling::div//input[@class = 'dx-texteditor-input']"));
             nombreUT.sendKeys("Unidad de trabajo selenium");
 
-            /*WebElement lineaTrabajoSelector = firefoxDriver.findElement(By.xpath("//div[div[contains(., 'Línea de trabajo')]]/following-sibling::dx-select-box"));
-            Thread.sleep(500);
-            lineaTrabajoSelector.click();*/
+            WebElement lineaTrabajoSelector = firefoxDriver.findElement(By.xpath("/html/body/tn-root/tn-pages/p-dialog/div/div[2]/tn-nueva-ut-g/dx-validation-group/auto-template/div[2]/div/div[1]/dxt-selectbox/div/dx-select-box"));
+            Actions actions = new Actions(firefoxDriver);
+            actions.moveToElement(lineaTrabajoSelector).click().perform();
 
-            Actions act =  new Actions(firefoxDriver);
-            act.moveToElement(firefoxDriver.findElement(By.xpath("//div[div[contains(., 'Línea de trabajo')]]/following-sibling::dx-select-box//div[@class = 'dx-dropdowneditor-icon']"))).click().perform();
-
-            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(., 'Linea de trabajo selenium con colaborador')]")));
-            WebElement lineaDeTrabajo = firefoxDriver.findElement(By.xpath("//div[contains(., 'Linea de trabajo selenium con colaborador')]"));
+            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class = 'dx-item dx-list-item']//div[contains(., 'Linea de trabajo selenium con colaborador')]")));
+            WebElement lineaDeTrabajo = firefoxDriver.findElement(By.xpath("//div[@class = 'dx-item dx-list-item']//div[contains(., 'Linea de trabajo selenium con colaborador')]"));
             lineaDeTrabajo.click();
+
+            WebElement crearYAbrirButton = firefoxDriver.findElement(By.xpath("//span[contains(., 'Crear y abrir')]"));
+            crearYAbrirButton.click();
+
+            try
+            {
+                firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Ficha de UT')]")));
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+                return e.toString() + "\nERROR. Se ha pulsado en crear y abrir pero no se abre la ficha de la UT";
+            }
 
 
             return "Test OK. Se ha creado una unidad de trabajo (UT)";

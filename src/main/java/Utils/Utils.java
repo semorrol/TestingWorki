@@ -73,4 +73,23 @@ public class Utils {
 
         waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Nueva Línea de trabajo')]")));
     }
+
+    public static void goToSprints(WebDriver driver, WebDriverWait waiting)
+    {
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tn-menu/ul/li[11]/a")));
+        WebElement siteElementsButton = driver.findElement(By.xpath("//tn-menu/ul/li[11]/a"));
+        siteElementsButton.click();
+
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Sprints')]")));
+        WebElement UTTypesButton = driver.findElement(By.xpath("//span[contains(., 'Sprints')]"));
+        UTTypesButton.click();
+
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Nuevo Sprint')]")));
+    }
+
+    public static void borrarBD(WebDriver driver, WebDriverWait waiting)
+    {
+        driver.get("https://cliente.tuneupprocess.com/ApiWeb/v1/Utils/RestoreBackup_199");
+        
+    }
 }

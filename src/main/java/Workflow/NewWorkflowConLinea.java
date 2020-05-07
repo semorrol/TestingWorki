@@ -67,7 +67,7 @@ public class NewWorkflowConLinea extends TestWithConfig {
             WebElement workflowNameInput = firefoxDriver.findElement(By.xpath("//div[span[contains(., 'Nuevo workflow')]]/following-sibling::div//input[@class = 'dx-texteditor-input']"));
             workflowNameInput.sendKeys("Workflow selenium con linea de trabajo");
 
-            WebElement lineaDeTrabajo = firefoxDriver.findElement(By.xpath("//div[span[contains(., 'Nuevo workflow')]]/following-sibling::div//div[contains(., 'Linea de trabajo selenium')]"));
+            WebElement lineaDeTrabajo = firefoxDriver.findElement(By.xpath("//div[span[contains(., 'Nuevo workflow')]]/following-sibling::div//div[contains(., 'Linea de trabajo selenium con colaborador')]"));
             lineaDeTrabajo.click();
 
             WebElement crearWF = firefoxDriver.findElement(By.xpath("//span[contains(., 'Crear')]"));
