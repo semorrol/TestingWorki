@@ -20,6 +20,17 @@ public class Utils {
         WebElement loginButton = driver.findElement(By.xpath("//button[@class = 'btn btn-primary btn-block btn-flat']"));
         loginButton.click();
 
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/tn-root/tn-login/div/div/dx-validation-group/div[3]/div/dx-select-box")));
+        WebElement siteSelector = driver.findElement(By.xpath("/html/body/tn-root/tn-login/div/div/dx-validation-group/div[3]/div/dx-select-box"));
+        siteSelector.click();
+
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(., 'Automatización Worki sitio pruebas')]")));
+        WebElement site = driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div[1]/div[2]/div[1]/div"));
+        site.click();
+
+        loginButton = driver.findElement(By.xpath("//button[@class = 'btn btn-primary btn-block btn-flat']"));
+        loginButton.click();
+
         //Esperamos hasta que se muestre el logo de la aplicacion para comprobar que se ha logeado correctamente
         waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//img[@class = 'topbar-logo']")));
     }
