@@ -2,6 +2,14 @@ package UTs;
 
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
+import Utils.Report;
+import Utils.Utils;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.ini4j.Wini;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -9,10 +17,16 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
 public class CheckValoresObligatorios extends TestWithConfig {
+
+    Report myReport;
+    ExtentHtmlReporter reporter;
+    ExtentReports extent;
+
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -50,8 +64,16 @@ public class CheckValoresObligatorios extends TestWithConfig {
         }
     }
 
-    private String checkValoresObligatorios()
-    {
+    private String checkValoresObligatorios() throws IOException, InterruptedException {
+
+        myReport = Report.getMyReporter();
+        reporter = myReport.getExtentHtmlReporter();
+        extent = myReport.getExtentReports();
+
+
+        ExtentTest logger = extent.createTest("Comprueba que aparece la alerta de rellenar todos los campos obligatorios");
+
+
         try
         {
             firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tn-menu/ul/li[4]/a")));
@@ -69,14 +91,29 @@ public class CheckValoresObligatorios extends TestWithConfig {
                         "and @aria-invalid = 'true']")));
             } catch (Exception e)
             {
+                logger.log(Status.FAIL, "No aparece la alerta que te indica que debes introducir un nombre para la unidad de trabajo");
+                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
+                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+                extent.flush();
+
+
                 e.printStackTrace();
                 return e.toString() + "\nERROR. No aparece la alerta que te indica que debes introducir un nombre para la unidad de trabajo";
             }
+
+            logger.log(Status.PASS, "La alerta de rellenar todos los campos aparece");
+            extent.flush();
 
             return "Test OK. Al intentar crear una UT sin nombre aparece una alerta";
 
         } catch (Exception e)
         {
+            logger.log(Status.FAIL, "Ha habido un error al interaccionar con la web");
+            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
+            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+            extent.flush();
+
+
             e.printStackTrace();
             return e.toString() + "\nERROR. No se ha podido completar el test";
         }

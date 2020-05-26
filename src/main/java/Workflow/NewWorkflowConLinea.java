@@ -2,6 +2,13 @@ package Workflow;
 
 import Utils.TestWithConfig;
 import Utils.Utils;
+import Utils.Report;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.ini4j.Wini;
 import Utils.MyFirefoxDriver;
 import org.openqa.selenium.By;
@@ -11,10 +18,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
 public class NewWorkflowConLinea extends TestWithConfig {
+
+    Report myReport;
+    ExtentHtmlReporter reporter;
+    ExtentReports extent;
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -53,8 +65,14 @@ public class NewWorkflowConLinea extends TestWithConfig {
         }
     }
 
-    private String createWorkflow()
-    {
+    private String createWorkflow() throws IOException, InterruptedException {
+
+        myReport = Report.getMyReporter();
+        reporter = myReport.getExtentHtmlReporter();
+        extent = myReport.getExtentReports();
+
+        ExtentTest logger = extent.createTest("Crea un nuevo workflow asociandole una linea de trabajo");
+
         try
         {
             Utils.goToWorkflows(firefoxDriver, firefoxWaiting);
@@ -78,13 +96,28 @@ public class NewWorkflowConLinea extends TestWithConfig {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'Workflow selenium con linea de trabajo')]")));
             } catch (Exception e)
             {
+
+                logger.log(Status.FAIL, "Se ha creado el showflow pero no aparece en la tabla");
+                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
+                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+                extent.flush();
+
                 e.printStackTrace();
                 return e.toString() + "\nERROR. No se ha podido crear el workflow";
             }
 
-            return "Test OK. Se ha creado un workflow";
+            logger.log(Status.PASS, "Se ha creado un nuevo workflow asociandole una linea de trabajo");
+            extent.flush();
+
+            return "Test OK. Se ha creado un nuevo workflow asociandole una linea de trabajo";
         } catch (Exception e)
         {
+
+            logger.log(Status.FAIL, "No se ha podido crear el workflow");
+            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
+            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+            extent.flush();
+
             e.printStackTrace();
             return e.toString() + "\nERROR. No se ha podido crear el workflow";
         }

@@ -1,8 +1,12 @@
 package UTs;
 
-import Utils.MyFirefoxDriver;
-import Utils.Test;
-import Utils.TestWithConfig;
+import Utils.*;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.ini4j.Wini;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,10 +16,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
 public class NewUTYAbrir extends TestWithConfig {
+
+    Report myReport;
+    ExtentHtmlReporter reporter;
+    ExtentReports extent;
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -54,8 +63,16 @@ public class NewUTYAbrir extends TestWithConfig {
         }
     }
 
-    private String newUT()
-    {
+    private String newUT() throws IOException, InterruptedException {
+
+        myReport = Report.getMyReporter();
+        reporter = myReport.getExtentHtmlReporter();
+        extent = myReport.getExtentReports();
+
+
+        ExtentTest logger = extent.createTest("Crea una nueva UT y comprueba la funcionalidad de abrirla");
+
+
         try
         {
             firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tn-menu/ul/li[4]/a")));
@@ -82,14 +99,29 @@ public class NewUTYAbrir extends TestWithConfig {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Ficha de UT')]")));
             } catch (Exception e)
             {
+                logger.log(Status.FAIL, "No aparece la ficha de UT al pulsar en crear y abrir");
+                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
+                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+                extent.flush();
+
+
                 e.printStackTrace();
                 return e.toString() + "\nERROR. Se ha pulsado en crear y abrir pero no se abre la ficha de la UT";
             }
+
+            logger.log(Status.PASS, "Se ha creado una UT y se ha comprobado que se abre correctamente");
+            extent.flush();
 
 
             return "Test OK. Se ha creado una unidad de trabajo (UT)";
         } catch (Exception e)
         {
+            logger.log(Status.FAIL, "No se ha podido crear la UT");
+            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
+            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+            extent.flush();
+
+
             e.printStackTrace();
             return e.toString() + "\nERROR. No se ha podido crear una unidad de trabajo (UT)";
         }

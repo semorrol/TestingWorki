@@ -1,10 +1,14 @@
 package Utils;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Utils {
     public static void loginWorki(WebDriver driver, WebDriverWait waiting, String url, String username, String password){
@@ -24,8 +28,8 @@ public class Utils {
         WebElement siteSelector = driver.findElement(By.xpath("/html/body/tn-root/tn-login/div/div/dx-validation-group/div[3]/div/dx-select-box"));
         siteSelector.click();
 
-        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(., 'Automatización Worki sitio pruebas')]")));
-        WebElement site = driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div[1]/div[2]/div[1]/div"));
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(., 'Automatización Worki sitio restaurable')]")));
+        WebElement site = driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div[1]/div[2]/div[2]/div"));
         site.click();
 
         loginButton = driver.findElement(By.xpath("//button[@class = 'btn btn-primary btn-block btn-flat']"));
@@ -101,6 +105,32 @@ public class Utils {
     public static void borrarBD(WebDriver driver, WebDriverWait waiting)
     {
         driver.get("https://cliente.tuneupprocess.com/ApiWeb/v1/Utils/RestoreBackup_199");
-        
+
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'true')]")));
+    }
+
+    public static String takeScreenshot(WebDriver driver) throws IOException, InterruptedException {
+        TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+        File src = takesScreenshot.getScreenshotAs(OutputType.FILE);
+
+        String path = System.getProperty("user.dir") + "/Screenshot/" + System.currentTimeMillis() + ".png";
+
+        File destination = new File(path);
+
+        try
+        {
+            FileUtils.copyFile(src, destination);
+        } catch (Exception e) {}
+
+        return path;
+    }
+
+    public static String getCurrentDate()
+    {
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        String strDate = formatter.format(date);
+
+        return strDate;
     }
 }

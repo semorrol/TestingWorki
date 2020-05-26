@@ -3,6 +3,14 @@ package UTType;
 import Utils.DriversConfig;
 import Utils.TestWithConfig;
 import Utils.Utils;
+import Utils.MyFirefoxDriver;
+import Utils.Report;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.ini4j.Wini;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,6 +18,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,6 +30,11 @@ public class NewUTTypeNonActive extends TestWithConfig {
     static String username;
     static String password;
 
+    Report myReport;
+    ExtentHtmlReporter reporter;
+    ExtentReports extent;
+
+    MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
     static WebDriverWait firefoxWaiting;
 
@@ -50,8 +64,9 @@ public class NewUTTypeNonActive extends TestWithConfig {
         password = commonIni.get("Login", "password");
 
         try {
-            firefoxDriver = DriversConfig.headlessOrNot(headless);
-            firefoxWaiting = new WebDriverWait(firefoxDriver, 5);
+            myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
+            firefoxDriver = myFirefoxDriver.getFirefoxDriver();
+            firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
 
             results.put(" Creates a new UT Type non active  ->  ", newUTTypenonActive());
 
@@ -65,7 +80,14 @@ public class NewUTTypeNonActive extends TestWithConfig {
 
     }
 
-    public String newUTTypenonActive(){
+    public String newUTTypenonActive() throws IOException, InterruptedException {
+
+        myReport = Report.getMyReporter();
+        reporter = myReport.getExtentHtmlReporter();
+        extent = myReport.getExtentReports();
+
+        ExtentTest logger = extent.createTest("Crea un nuevo tipo de UT marcandolo como No Activo");
+
         try{
             Utils.goToUTType(firefoxDriver, firefoxWaiting);
 
@@ -87,6 +109,12 @@ public class NewUTTypeNonActive extends TestWithConfig {
             //Comprueba que se ha creado y que no aparece en los activos pero si en los no activos
             try{
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type non active')]")));
+
+                logger.log(Status.FAIL, "El tipo de UT no activo aparece en la vista de tipos de UT activos");
+                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
+                logger.fail("", MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+                extent.flush();
+
                 return "ERROR. The non active UT type appears on the actives UT types view";
             } catch (Exception e) {
                 Utils.showNonActiveUTTypes(firefoxDriver, firefoxWaiting);
@@ -94,10 +122,19 @@ public class NewUTTypeNonActive extends TestWithConfig {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type non active')]")));
             }
 
-            return "Test OK. A new UT type non active was created";
+            logger.log(Status.PASS, "Se ha creado un nuevo tipo de UT no activo");
+            extent.flush();
+
+            return "Test OK. Se ha creado un nuevo tipo de UT no activo";
         } catch(Exception e) {
+
+            logger.log(Status.FAIL, "No se ha podido crear un nuevo tipo de UT no activo");
+            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
+            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+            extent.flush();
+
             e.printStackTrace();
-            return e.toString() + "\nERROR. A new UT type non active could not be created";
+            return e.toString() + "\nERROR. No se ha podido crear un nuevo tipo de UT no activo";
         }
     }
 }

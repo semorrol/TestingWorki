@@ -14,16 +14,30 @@ import exceptions.MissingParameterException;
 import org.ini4j.Wini;
 import Utils.Color;
 import Utils.MyFirefoxDriver;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.io.File;
 import java.util.*;
 
 public class main {
+
+    static MyFirefoxDriver myFirefoxDriver;
+    static WebDriver firefoxDriver;
+    static WebDriverWait firefoxWaiting;
+
     public static void main(String[] args) {
         if (args.length == 0)
         {
             System.out.println(Color.RED + "ERROR. You need to pass at least one argument with the path of the inicialization file" + Color.RESET);
             System.exit(0);
         }
+
+        //Restaura la base de datos
+        myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
+        firefoxDriver = myFirefoxDriver.getFirefoxDriver();
+        firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
+        Utils.Utils.borrarBD(firefoxDriver,firefoxWaiting);
 
         try
         {
@@ -106,7 +120,7 @@ public class main {
     public static List<String> getTestsToRun(Wini config)
     {
         String testsListAsString = config.get("General", "testsList");
-        List<String> testsToRun = testsListAsString != null ? Arrays.asList(testsListAsString.split(",")) : new ArrayList<>();
+        List<String> testsToRun = testsListAsString != null ? Arrays.asList(testsListAsString.split(",")) : new ArrayList<String>();
         return testsToRun;
     }
 
