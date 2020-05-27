@@ -1,5 +1,7 @@
 package UTType;
 
+import LineaDeTrabajo.NewLineaConColaborador;
+import Login.LoginWorki;
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Utils;
@@ -22,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewUTTypeConLinea extends TestWithConfig {
+
+    NewLineaConColaborador newLineaConColaboradorTest = new NewLineaConColaborador(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -51,6 +55,8 @@ public class NewUTTypeConLinea extends TestWithConfig {
             myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
+
+            newLineaConColaboradorTest.check();
 
             results.put("Crea un nuevo tipo de ut asociandole una linea de trabajo  ->  ", newUTTypeConLinea());
 

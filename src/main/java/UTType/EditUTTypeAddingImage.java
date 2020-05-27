@@ -1,5 +1,6 @@
 package UTType;
 
+import Login.LoginWorki;
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Utils;
@@ -8,6 +9,7 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.ini4j.Wini;
@@ -24,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class EditUTTypeAddingImage extends TestWithConfig {
+
+    NewUTTypeByDefault newUTTypeByDefaultTest = new NewUTTypeByDefault(commonIni);
 
     private String imagePath;
 
@@ -61,6 +65,8 @@ public class EditUTTypeAddingImage extends TestWithConfig {
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
 
+            newUTTypeByDefaultTest.check();
+
             results.put("Al cambiar la imagen del tipo esta se muestra en la lista", editUTTypeAddingImage());
 
             return results;
@@ -86,12 +92,14 @@ public class EditUTTypeAddingImage extends TestWithConfig {
             WebElement thunderButton = firefoxDriver.findElement(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//button[@class = 'tn-button--dropdown']"));
             thunderButton.click();
 
-            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Editar')]")));
-            WebElement editButton = firefoxDriver.findElement(By.xpath("//span[contains(., 'Editar')]"));
+            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//span[contains(., 'Editar')]")));
+            WebElement editButton = firefoxDriver.findElement(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//span[contains(., 'Editar')]"));
             editButton.click();
 
             WebElement uploadImageButton = firefoxDriver.findElement(By.xpath("//input[@class = 'dx-fileuploader-input']"));
             uploadImageButton.sendKeys(imagePath);
+
+            Thread.sleep(1000);
 
             WebElement saveButton = firefoxDriver.findElement(By.xpath("//span[contains(., 'Guardar')]"));
             saveButton.click();
@@ -110,6 +118,8 @@ public class EditUTTypeAddingImage extends TestWithConfig {
             }
 
             logger.log(Status.PASS, "Se ha añadido una imagen al tipo de UT por defecto y se ha comprobado que aparece");
+            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
+            logger.pass("La imagen ha cambiado", MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
             extent.flush();
 
 

@@ -1,5 +1,6 @@
 package UTType;
 
+import Login.LoginWorki;
 import Utils.TestWithConfig;
 import Utils.Utils;
 import Utils.Report;
@@ -24,10 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewUTTypeByDefault extends TestWithConfig {
-    static String url;
-    static String headless;
-    static String username;
-    static String password;
+
+    LoginWorki loginWorkiTest = new LoginWorki(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -47,9 +46,6 @@ public class NewUTTypeByDefault extends TestWithConfig {
     public HashMap<String, List<String>> getRequiredParameters() {
         HashMap<String, List<String>> requiredParameters = new HashMap<>();
 
-        requiredParameters.put("General", new ArrayList<>(Arrays.asList("url")));
-        requiredParameters.put("Login", new ArrayList<>(Arrays.asList("username", "password")));
-
         return requiredParameters;
     }
 
@@ -57,15 +53,12 @@ public class NewUTTypeByDefault extends TestWithConfig {
     public HashMap<String, String> check() throws Exception {
         super.checkParameters();
 
-        url = commonIni.get("General", "url");
-        headless = commonIni.get("General", "headless");
-        username = commonIni.get("Login", "username");
-        password = commonIni.get("Login", "password");
-
         try {
             myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
+
+            loginWorkiTest.check();
 
             results.put(" Creates a new UT Type with the configuration by default  ->  ", newUTTYpeByDefault());
 

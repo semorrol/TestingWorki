@@ -1,5 +1,6 @@
 package UTType;
 
+import Login.LoginWorki;
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Report;
@@ -22,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DeleteUTTypeCheckAlert extends TestWithConfig {
+
+    NewUTTypeByDefault newUTTypeByDefaultTest = new NewUTTypeByDefault(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -52,6 +55,8 @@ public class DeleteUTTypeCheckAlert extends TestWithConfig {
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
 
+            newUTTypeByDefaultTest.check();
+
             results.put("Eliminacion de un tipo sin UT asociadas. Aparece antes un mensaje de confirmacion", deleteUTTypeCheckAlert());
 
             return results;
@@ -72,13 +77,12 @@ public class DeleteUTTypeCheckAlert extends TestWithConfig {
 
         try {
             Utils.goToUTType(firefoxDriver, firefoxWaiting);
-
-            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[@class = 'tn-button--dropdown']")));
-            WebElement thunderButton = firefoxDriver.findElement(By.xpath("//button[@class = 'tn-button--dropdown']"));
+            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//button[@class = 'tn-button--dropdown']")));
+            WebElement thunderButton = firefoxDriver.findElement(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//button[@class = 'tn-button--dropdown']"));
             thunderButton.click();
 
-            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Eliminar')]")));
-            WebElement deleteButton = firefoxDriver.findElement(By.xpath("//span[contains(., 'Eliminar')]"));
+            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//span[contains(., 'Eliminar')]")));
+            WebElement deleteButton = firefoxDriver.findElement(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//span[contains(., 'Eliminar')]"));
             deleteButton.click();
 
             try

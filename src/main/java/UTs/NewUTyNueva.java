@@ -1,9 +1,11 @@
 package UTs;
 
+import UTType.NewUTTypeConLinea;
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Report;
 import Utils.Utils;
+import Workflow.NewWorkflowConLinea;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
@@ -23,6 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewUTyNueva extends TestWithConfig {
+
+    NewWorkflowConLinea newWorkflowConLineaTest = new NewWorkflowConLinea(commonIni);
+    NewUTTypeConLinea newUTTypeConLineaTest = new NewUTTypeConLinea(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -53,6 +58,9 @@ public class NewUTyNueva extends TestWithConfig {
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
 
+            newUTTypeConLineaTest.check();
+            newWorkflowConLineaTest.check();
+
             results.put("Crea una nueva UT y pulsa en crear otra  ->  ", newUT());
 
             return results;
@@ -74,8 +82,8 @@ public class NewUTyNueva extends TestWithConfig {
 
         try
         {
-            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tn-menu/ul/li[4]/a")));
-            WebElement nuevaUT = firefoxDriver.findElement(By.xpath("//tn-menu/ul/li[4]/a"));
+            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tn-menu/ul/li[5]/a")));
+            WebElement nuevaUT = firefoxDriver.findElement(By.xpath("//tn-menu/ul/li[5]/a"));
             nuevaUT.click();
 
             firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[span[contains(., 'Nueva Unidad de Trabajo (UT)')]]/following-sibling::div//input[@class = 'dx-texteditor-input']")));

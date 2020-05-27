@@ -18,7 +18,7 @@ public class MyFirefoxDriver {
 
     public MyFirefoxDriver(){
         this.firefoxDriver = DriversConfig.iniFirefoxDriver();
-        this.firefoxWaiting = new WebDriverWait(this.firefoxDriver, 5);
+        this.firefoxWaiting = new WebDriverWait(this.firefoxDriver, 7);
     }
 
     public WebDriverWait getFirefoxWaiting() {

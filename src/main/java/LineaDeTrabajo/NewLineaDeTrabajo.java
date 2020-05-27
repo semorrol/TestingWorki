@@ -1,5 +1,6 @@
 package LineaDeTrabajo;
 
+import Login.LoginWorki;
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Utils;
@@ -22,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewLineaDeTrabajo extends TestWithConfig {
+
+    LoginWorki loginWorkiTest = new LoginWorki(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -55,6 +58,8 @@ public class NewLineaDeTrabajo extends TestWithConfig {
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
 
+            loginWorkiTest.check();
+
             results.put("Crea una linea de trabajo", crearLineaTrabajo());
 
             return results;
@@ -79,6 +84,7 @@ public class NewLineaDeTrabajo extends TestWithConfig {
             Utils.goToLineasDeTrabajo(firefoxDriver, firefoxWaiting);
 
             WebElement nuevaLinea = firefoxDriver.findElement(By.xpath("//span[contains(., 'Nueva Línea de trabajo')]"));
+            Thread.sleep(400);
             nuevaLinea.click();
 
             firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[span[contains(., 'Nueva línea de trabajo')]]/following-sibling::div//input[@class = 'dx-texteditor-input']")));

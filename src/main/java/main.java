@@ -37,7 +37,6 @@ public class main {
         myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
         firefoxDriver = myFirefoxDriver.getFirefoxDriver();
         firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
-        Utils.Utils.borrarBD(firefoxDriver,firefoxWaiting);
 
         try
         {
@@ -132,6 +131,10 @@ public class main {
             if(tests.containsKey(testName))
             {
                 System.out.println(Color.CYAN + "Beggining test: " + testName + Color.RESET);
+
+                //Borra el contenido de la base de datos antes de lanzar cada test
+                Utils.Utils.borrarBD(firefoxDriver,firefoxWaiting);
+
                 HashMap<String, String> results = tests.get(testName).check();
                 for (String name: results.keySet()){
                     String key = name.toString();
@@ -149,6 +152,5 @@ public class main {
             }
         }
         MyFirefoxDriver.closeDriver();
-
     }
 }

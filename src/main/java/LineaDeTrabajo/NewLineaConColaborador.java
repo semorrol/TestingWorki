@@ -1,5 +1,6 @@
 package LineaDeTrabajo;
 
+import Login.LoginWorki;
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Utils;
@@ -22,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewLineaConColaborador extends TestWithConfig {
+
+    LoginWorki loginWorkiTest = new LoginWorki(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -55,6 +58,8 @@ public class NewLineaConColaborador extends TestWithConfig {
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
 
+            loginWorkiTest.check();
+
             results.put("Crea una linea de trabajo con colaborador asociado", crearLineaTrabajoConColaborador());
 
             return results;
@@ -79,37 +84,45 @@ public class NewLineaConColaborador extends TestWithConfig {
         {
             Utils.goToLineasDeTrabajo(firefoxDriver, firefoxWaiting);
 
-            WebElement nuevaLinea = firefoxDriver.findElement(By.xpath("//span[contains(., 'Nueva Línea de trabajo')]"));
-            nuevaLinea.click();
-
-            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[span[contains(., 'Nueva línea de trabajo')]]/following-sibling::div//input[@class = 'dx-texteditor-input']")));
-            WebElement nombreLinea = firefoxDriver.findElement(By.xpath("//div[span[contains(., 'Nueva línea de trabajo')]]/following-sibling::div//input[@class = 'dx-texteditor-input']"));
-            nombreLinea.sendKeys("Linea de trabajo selenium con colaborador");
-
-            WebElement colaborador = firefoxDriver.findElement(By.xpath("//div[@class = 'dx-scrollview-content']//div[contains(., 'Sebastián Morcillo')]"));
-            colaborador.click();
-
-            WebElement crearLinea = firefoxDriver.findElement(By.xpath("//span[contains(., 'Crear')]"));
-            crearLinea.click();
-
-            try {
-                firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'Linea de trabajo selenium con colaborador')]")));
-            } catch (Exception e)
+            //Comprueba que esa linea no está creada ya
+            if(firefoxDriver.findElements(By.xpath("//td[contains(., 'Linea de trabajo selenium con colaborador')]")).size() == 0)
             {
-                logger.log(Status.FAIL, "La linea de trabajo no aparece en la tabla");
-                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+                WebElement nuevaLinea = firefoxDriver.findElement(By.xpath("//span[contains(., 'Nueva Línea de trabajo')]"));
+                nuevaLinea.click();
+
+                firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[span[contains(., 'Nueva línea de trabajo')]]/following-sibling::div//input[@class = 'dx-texteditor-input']")));
+                WebElement nombreLinea = firefoxDriver.findElement(By.xpath("//div[span[contains(., 'Nueva línea de trabajo')]]/following-sibling::div//input[@class = 'dx-texteditor-input']"));
+                nombreLinea.sendKeys("Linea de trabajo selenium con colaborador");
+
+                WebElement colaborador = firefoxDriver.findElement(By.xpath("//div[@class = 'dx-scrollview-content']//div[contains(., 'Sebastián Morcillo')]"));
+                colaborador.click();
+
+                WebElement crearLinea = firefoxDriver.findElement(By.xpath("//span[contains(., 'Crear')]"));
+                crearLinea.click();
+
+                try {
+                    firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'Linea de trabajo selenium con colaborador')]")));
+                } catch (Exception e)
+                {
+                    logger.log(Status.FAIL, "La linea de trabajo no aparece en la tabla");
+                    String screenshotPath = Utils.takeScreenshot(firefoxDriver);
+                    logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+                    extent.flush();
+
+
+                    e.printStackTrace();
+                    return e.toString() + "\nERROR. No se ha podido crear una linea de trabajo con colaborador";
+                }
+
+                logger.log(Status.PASS, "Se ha creado una linea de trabajo con colaborador");
                 extent.flush();
 
-
-                e.printStackTrace();
-                return e.toString() + "\nERROR. No se ha podido crear una linea de trabajo con colaborador";
+                return "Test OK. Se ha creado una linea de trabajo con colaborador";
             }
-
-            logger.log(Status.PASS, "Se ha creado una linea de trabajo con colaborador");
+            logger.log(Status.PASS, "No se ha creado porque ya existía al ser creada en un test previo");
             extent.flush();
 
-            return "Test OK. Se ha creado una linea de trabajo con colaborador";
+            return "Test OK. Ya existe esa linea de trabajo";
         } catch (Exception e)
         {
 

@@ -1,5 +1,6 @@
 package Workflow;
 
+import LineaDeTrabajo.NewLineaConColaborador;
 import Utils.TestWithConfig;
 import Utils.Utils;
 import Utils.Report;
@@ -23,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewWorkflowConLinea extends TestWithConfig {
+
+    NewLineaConColaborador newLineaConColaboradorTest = new NewLineaConColaborador(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -54,6 +57,8 @@ public class NewWorkflowConLinea extends TestWithConfig {
             myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
+
+            newLineaConColaboradorTest.check();
 
             results.put("Crea un worflow con una linea de trabajo asociada", createWorkflow());
 

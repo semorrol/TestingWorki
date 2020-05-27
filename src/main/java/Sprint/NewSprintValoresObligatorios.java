@@ -1,5 +1,6 @@
 package Sprint;
 
+import LineaDeTrabajo.NewLineaConColaborador;
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Utils;
@@ -23,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewSprintValoresObligatorios extends TestWithConfig {
+
+    NewLineaConColaborador newLineaConColaboradorTest = new NewLineaConColaborador(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -53,6 +56,8 @@ public class NewSprintValoresObligatorios extends TestWithConfig {
             myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
+
+            newLineaConColaboradorTest.check();
 
             results.put("Crea un nuevo Sprint con los valores obligatorios  ->  ", newSprint());
 

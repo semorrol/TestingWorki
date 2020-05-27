@@ -1,5 +1,6 @@
 package UTType;
 
+import Login.LoginWorki;
 import Utils.DriversConfig;
 import Utils.TestWithConfig;
 import Utils.Utils;
@@ -25,10 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewUTTypeWithFailure extends TestWithConfig {
-    static String url;
-    static String headless;
-    static String username;
-    static String password;
+
+    LoginWorki loginWorkiTest = new LoginWorki(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -58,15 +57,12 @@ public class NewUTTypeWithFailure extends TestWithConfig {
     public HashMap<String, String> check() throws Exception {
         super.checkParameters();
 
-        url = commonIni.get("General", "url");
-        headless = commonIni.get("General", "headless");
-        username = commonIni.get("Login", "username");
-        password = commonIni.get("Login", "password");
-
         try {
             myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
+
+            loginWorkiTest.check();
 
             results.put(" Creates a new UT Type with failure  ->  ", newUTTYpeWithFailure());
 

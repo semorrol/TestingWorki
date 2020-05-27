@@ -1,5 +1,6 @@
 package UTType;
 
+import Login.LoginWorki;
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Utils;
@@ -14,6 +15,7 @@ import org.ini4j.Wini;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class EditUTType extends TestWithConfig {
+
+    NewUTTypeByDefault newUTTypeByDefaultTest = new NewUTTypeByDefault(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -52,6 +56,8 @@ public class EditUTType extends TestWithConfig {
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
 
+            newUTTypeByDefaultTest.check();
+
             results.put("-- Cambio de valores en formulario y su visualizacion en lista de tipos ademas de comprobar guardado al volver a acceder al tipo  ->  ", editUTTypeAndCheck());
 
             return results;
@@ -77,8 +83,8 @@ public class EditUTType extends TestWithConfig {
             WebElement thunderButton = firefoxDriver.findElement(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//button[@class = 'tn-button--dropdown']"));
             thunderButton.click();
 
-            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Editar')]")));
-            WebElement editButton = firefoxDriver.findElement(By.xpath("//span[contains(., 'Editar')]"));
+            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//span[contains(., 'Editar')]")));
+            WebElement editButton = firefoxDriver.findElement(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//span[contains(., 'Editar')]"));
             editButton.click();
 
             firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Fallo')]")));
@@ -106,8 +112,8 @@ public class EditUTType extends TestWithConfig {
             thunderButton = firefoxDriver.findElement(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//button[@class = 'tn-button--dropdown']"));
             thunderButton.click();
 
-            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Editar')]")));
-            editButton = firefoxDriver.findElement(By.xpath("//span[contains(., 'Editar')]"));
+            firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//span[contains(., 'Editar')]")));
+            editButton = firefoxDriver.findElement(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//span[contains(., 'Editar')]"));
             editButton.click();
 
             try {

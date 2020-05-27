@@ -23,6 +23,8 @@ import java.util.List;
 
 public class DeleteSprint extends TestWithConfig {
 
+    NewSprintValoresObligatorios newSprintValoresObligatoriosTest = new NewSprintValoresObligatorios(commonIni);
+
     Report myReport;
     ExtentHtmlReporter reporter;
     ExtentReports extent;
@@ -51,6 +53,8 @@ public class DeleteSprint extends TestWithConfig {
             myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
+
+            newSprintValoresObligatoriosTest.check();
 
             results.put("Borra un sprint  ->  ", deleteSprint());
 

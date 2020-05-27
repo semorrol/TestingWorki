@@ -1,5 +1,6 @@
 package UTType;
 
+import Login.LoginWorki;
 import Utils.TestWithConfig;
 import Utils.Utils;
 import Utils.Report;
@@ -21,7 +22,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+//Este test necesita que se ejecute previamente NewUTTypeByDefault
 public class CheckUTTYpeNameAlreadyExists extends TestWithConfig {
+
+    NewUTTypeByDefault newUTTypeByDefaultTest = new NewUTTypeByDefault(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -53,6 +57,8 @@ public class CheckUTTYpeNameAlreadyExists extends TestWithConfig {
             myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
+
+            newUTTypeByDefaultTest.check();
 
             results.put("Comprueba que no deja crear un tipo de UT con el mismo nombre de una que ya existe", checkUTTypeAlreadyExists());
 

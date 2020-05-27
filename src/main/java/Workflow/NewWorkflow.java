@@ -1,5 +1,6 @@
 package Workflow;
 
+import Login.LoginWorki;
 import Utils.TestWithConfig;
 import Utils.Utils;
 import com.aventstack.extentreports.ExtentReports;
@@ -23,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewWorkflow extends TestWithConfig {
+
+    LoginWorki loginWorkiTest = new LoginWorki(commonIni);
 
     Report myReport;
     ExtentHtmlReporter reporter;
@@ -54,6 +57,8 @@ public class NewWorkflow extends TestWithConfig {
             myFirefoxDriver = MyFirefoxDriver.getMyFirefoxDriver();
             firefoxDriver = myFirefoxDriver.getFirefoxDriver();
             firefoxWaiting = myFirefoxDriver.getFirefoxWaiting();
+
+            loginWorkiTest.check();
 
             results.put("Creates a workflow", createWorkflow());
 

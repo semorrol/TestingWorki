@@ -11,32 +11,39 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Utils {
-    public static void loginWorki(WebDriver driver, WebDriverWait waiting, String url, String username, String password){
+    public static void loginWorki(WebDriver driver, WebDriverWait waiting, String url, String username, String password) throws InterruptedException {
         driver.get(url);
 
-        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//dx-text-box[@placeholder = 'Email']")));
-        WebElement emailInput = driver.findElement(By.xpath("//dx-text-box[@placeholder = 'Email']//input"));
-        emailInput.sendKeys(username);
+        Thread.sleep(2000);
 
-        WebElement passwordInput = driver.findElement(By.xpath("//dx-text-box[@placeholder = 'Password']//input"));
-        passwordInput.sendKeys(password);
+        //Comprobamos que la sesion no esta iniciada ya
+        if(driver.findElements(By.xpath("//img[@class = 'topbar-logo']")).size() == 0)
+        {
+            waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//dx-text-box[@placeholder = 'Email']")));
+            WebElement emailInput = driver.findElement(By.xpath("//dx-text-box[@placeholder = 'Email']//input"));
+            emailInput.sendKeys(username);
 
-        WebElement loginButton = driver.findElement(By.xpath("//button[@class = 'btn btn-primary btn-block btn-flat']"));
-        loginButton.click();
+            WebElement passwordInput = driver.findElement(By.xpath("//dx-text-box[@placeholder = 'Password']//input"));
+            passwordInput.sendKeys(password);
 
-        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/tn-root/tn-login/div/div/dx-validation-group/div[3]/div/dx-select-box")));
-        WebElement siteSelector = driver.findElement(By.xpath("/html/body/tn-root/tn-login/div/div/dx-validation-group/div[3]/div/dx-select-box"));
-        siteSelector.click();
+            WebElement loginButton = driver.findElement(By.xpath("//button[@class = 'btn btn-primary btn-block btn-flat']"));
+            loginButton.click();
 
-        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(., 'Automatización Worki sitio restaurable')]")));
-        WebElement site = driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div[1]/div[2]/div[2]/div"));
-        site.click();
+            waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/tn-root/tn-login/div/div/dx-validation-group/div[3]/div/dx-select-box")));
+            WebElement siteSelector = driver.findElement(By.xpath("/html/body/tn-root/tn-login/div/div/dx-validation-group/div[3]/div/dx-select-box"));
+            siteSelector.click();
 
-        loginButton = driver.findElement(By.xpath("//button[@class = 'btn btn-primary btn-block btn-flat']"));
-        loginButton.click();
+            waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(., 'Automatización Worki sitio restaurable')]")));
+            WebElement site = driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div[1]/div[2]/div[2]/div"));
+            site.click();
 
-        //Esperamos hasta que se muestre el logo de la aplicacion para comprobar que se ha logeado correctamente
-        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//img[@class = 'topbar-logo']")));
+            loginButton = driver.findElement(By.xpath("//button[@class = 'btn btn-primary btn-block btn-flat']"));
+            loginButton.click();
+
+            //Esperamos hasta que se muestre el logo de la aplicacion para comprobar que se ha logeado correctamente
+            waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//img[@class = 'topbar-logo']")));
+        }
+
     }
 
     public static void goToUTType(WebDriver driver, WebDriverWait waiting) {
@@ -132,5 +139,16 @@ public class Utils {
         String strDate = formatter.format(date);
 
         return strDate;
+    }
+
+    public static void logOutWorki(WebDriver driver, WebDriverWait waiting)
+    {
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//img[@src = 'https://cliente.tuneupprocess.com/ApiWeb/v1/Agentes/4/Imagen?idSitio=199']")));
+        WebElement imagenPerfil = driver.findElement(By.xpath("//img[@src = 'https://cliente.tuneupprocess.com/ApiWeb/v1/Agentes/4/Imagen?idSitio=199']"));
+        imagenPerfil.click();
+
+        waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Salir')]")));
+        WebElement salirButton = driver.findElement(By.xpath("//span[contains(., 'Salir')]"));
+        salirButton.click();
     }
 }
