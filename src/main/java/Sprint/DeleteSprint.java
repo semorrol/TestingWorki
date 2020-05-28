@@ -23,11 +23,10 @@ import java.util.List;
 
 public class DeleteSprint extends TestWithConfig {
 
-    NewSprintValoresObligatorios newSprintValoresObligatoriosTest = new NewSprintValoresObligatorios(commonIni);
+    static final String TEST_ID = "deleteSprint";
+    static final String TEST_NAME = "Borrar sprint";
 
-    Report myReport;
-    ExtentHtmlReporter reporter;
-    ExtentReports extent;
+    NewSprintValoresObligatorios newSprintValoresObligatoriosTest = new NewSprintValoresObligatorios(commonIni);
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -69,13 +68,6 @@ public class DeleteSprint extends TestWithConfig {
 
     private String deleteSprint() throws IOException, InterruptedException {
 
-        myReport = Report.getMyReporter();
-        reporter = myReport.getExtentHtmlReporter();
-        extent = myReport.getExtentReports();
-
-
-        ExtentTest logger = extent.createTest("Borrar sprint");
-
         try
         {
             Utils.goToSprints(firefoxDriver, firefoxWaiting);
@@ -95,6 +87,8 @@ public class DeleteSprint extends TestWithConfig {
                 yesButton.click();
             } catch(Exception e)
             {
+                Report.testFailed(TEST_NAME, "No aparece el mensaje de confirmacion de borrado de tipo", ExceptionUtils.getStackTrace(e), firefoxDriver);
+
                 e.printStackTrace();
                 return e.toString() + "\nERROR. No aparece el mensaje de confirmación de borrado de tipo";
             }
@@ -104,27 +98,19 @@ public class DeleteSprint extends TestWithConfig {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'Sprint con valores obligatorios')]")));
                 //si encuentra el elemento es que no se ha borrado correctamente
 
-                logger.log(Status.FAIL, "El sprint sigue apareciendo en la tabla despues de borrarlo");
-                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-                logger.fail("El sprint sigue apareciendo en la tabla despues de borrarlo", MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-                extent.flush();
-
+                Report.testFailed(TEST_NAME, "El sprint sigue apareciendo en la tabla despues de borrarlo", "El sprint sigue apareciendo en la tabla despues de borrarlo",
+                        firefoxDriver);
 
                 return "ERROR. Se ha borrado el sprint pero sigue apareciendo en la tabla";
             } catch (Exception e)
             { }
 
-            logger.log(Status.PASS, "Se ha borrado el sprint correctamente");
-            extent.flush();
+            Report.testPassed(TEST_ID, TEST_NAME, "Se ha borrado el sprint correctamente");
 
             return "Test OK. Se ha borrado el sprint correctamente";
         } catch (Exception e)
         {
-
-            logger.log(Status.FAIL, "No se ha podido borrar el sprint");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
+            Report.testFailed(TEST_NAME, "No se ha podido borrar el sprint", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
             e.printStackTrace();
             return e.toString() + "\nERROR. No se ha podido borrar el sprint";

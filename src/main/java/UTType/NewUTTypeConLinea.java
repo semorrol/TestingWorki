@@ -4,6 +4,7 @@ import LineaDeTrabajo.NewLineaConColaborador;
 import Login.LoginWorki;
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
+import Utils.TestOPasoPrevio;
 import Utils.Utils;
 import Utils.Report;
 import com.aventstack.extentreports.ExtentReports;
@@ -25,11 +26,10 @@ import java.util.List;
 
 public class NewUTTypeConLinea extends TestWithConfig {
 
-    NewLineaConColaborador newLineaConColaboradorTest = new NewLineaConColaborador(commonIni);
+    static final String TEST_ID = "newUTTypeConLinea";
+    static final String TEST_NAME = "Crea un nuevo tipo de UT asociandole una linea de trabajo";
 
-    Report myReport;
-    ExtentHtmlReporter reporter;
-    ExtentReports extent;
+    NewLineaConColaborador newLineaConColaboradorTest = new NewLineaConColaborador(commonIni);
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -70,12 +70,6 @@ public class NewUTTypeConLinea extends TestWithConfig {
 
     private String newUTTypeConLinea() throws IOException, InterruptedException {
 
-        myReport = Report.getMyReporter();
-        reporter = myReport.getExtentHtmlReporter();
-        extent = myReport.getExtentReports();
-
-        ExtentTest logger = extent.createTest("Crea un nuevo tipo de UT asociandole una linea de trabajo");
-
         try
         {
             Utils.goToUTType(firefoxDriver, firefoxWaiting);
@@ -98,17 +92,12 @@ public class NewUTTypeConLinea extends TestWithConfig {
             //Comprueba que se ha creado el tipo de ut
             firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'Tipo de UT con linea')]")));
 
-            logger.log(Status.PASS, "Se ha creado un tipo de ut con linea de trabajo asociada");
-            extent.flush();
+            Report.testPassed(TEST_ID, TEST_NAME, "Se ha creado un tipo de ut con linea de trabajo asociada");
 
             return "Test OK. Se ha creado un nuevo tipo de ut con linea de trabajo asociada";
         } catch (Exception e)
         {
-
-            logger.log(Status.FAIL, "No se ha podido crear un nuevo tipo de ut con linea de trabajo asociada");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
+            Report.testFailed(TEST_NAME,"No se ha podido crear un nuevo tipo de ut con linea de trabajo asociada", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
             e.printStackTrace();
             return e.toString() + "\nERROR. No se ha podido crear un nuevo tipo de ut con linea de trabajo asociada";

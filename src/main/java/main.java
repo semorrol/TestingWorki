@@ -7,13 +7,11 @@ import UTType.*;
 import UTs.CheckValoresObligatorios;
 import UTs.NewUTYAbrir;
 import UTs.NewUTyNueva;
-import Utils.Test;
+import Utils.*;
 import Workflow.NewWorkflow;
 import Workflow.NewWorkflowConLinea;
 import exceptions.MissingParameterException;
 import org.ini4j.Wini;
-import Utils.Color;
-import Utils.MyFirefoxDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -25,6 +23,7 @@ public class main {
     static MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
     static WebDriverWait firefoxWaiting;
+    static TestOPasoPrevio testOPasoPrevio;
 
     public static void main(String[] args) {
         if (args.length == 0)
@@ -40,9 +39,11 @@ public class main {
 
         try
         {
+            new Report(); //inicializa la clase Report para manejar los reportes
             Wini commonIni = getConfig(args);
             Map<String, Test> tests = initializeTests(commonIni);
             List<String> testsList = getTestsToRun(commonIni);
+            testOPasoPrevio = new TestOPasoPrevio(testsList); //Se crea el Hashmap para manejar cuando un test se debe añadir al reporte y cuando no
             runTests(testsList, tests);
         }
         catch (MissingParameterException e2) {
@@ -61,6 +62,8 @@ public class main {
         tests.put("loginWorki", new LoginWorki(config));
         tests.put("newUTTypeByDefault", new NewUTTypeByDefault(config));
         tests.put("newUTTypeConLinea", new NewUTTypeConLinea(config));
+        tests.put("newUTTypeNonActive", new NewUTTypeNonActive(config));
+        tests.put("newUTTypeWithFailure", new NewUTTypeWithFailure(config));
         tests.put("checkUTTypeNameAlreadyExists", new CheckUTTYpeNameAlreadyExists(config));
         tests.put("editUTType", new EditUTType(config));
         tests.put("deleteUTType", new DeleteUTTypeCheckAlert(config));
@@ -133,7 +136,7 @@ public class main {
                 System.out.println(Color.CYAN + "Beggining test: " + testName + Color.RESET);
 
                 //Borra el contenido de la base de datos antes de lanzar cada test
-                Utils.Utils.borrarBD(firefoxDriver,firefoxWaiting);
+                Utils.borrarBD(firefoxDriver,firefoxWaiting);
 
                 HashMap<String, String> results = tests.get(testName).check();
                 for (String name: results.keySet()){

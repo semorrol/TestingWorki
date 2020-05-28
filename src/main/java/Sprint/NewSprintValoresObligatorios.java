@@ -25,12 +25,10 @@ import java.util.List;
 
 public class NewSprintValoresObligatorios extends TestWithConfig {
 
+    static final String TEST_ID = "newSprintValoresObligatorios";
+    static final String TEST_NAME = "Crea un sprint con los valores obligatorios necesarios";
+
     NewLineaConColaborador newLineaConColaboradorTest = new NewLineaConColaborador(commonIni);
-
-    Report myReport;
-    ExtentHtmlReporter reporter;
-    ExtentReports extent;
-
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -72,12 +70,6 @@ public class NewSprintValoresObligatorios extends TestWithConfig {
 
     private String newSprint() throws IOException, InterruptedException {
 
-        myReport = Report.getMyReporter();
-        reporter = myReport.getExtentHtmlReporter();
-        extent = myReport.getExtentReports();
-
-        ExtentTest logger = extent.createTest("Crea un sprint con los valores obligatorios necesarios");
-
         try
         {
             Utils.goToSprints(firefoxDriver, firefoxWaiting);
@@ -104,27 +96,19 @@ public class NewSprintValoresObligatorios extends TestWithConfig {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'Sprint con valores obligatorios')]")));
             } catch (Exception e)
             {
-                logger.log(Status.FAIL, "Se ha rellenado el formulario y se ha creado el sprint pero no aparece en la tabla de sprints");
-                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-                extent.flush();
-
+                Report.testFailed(TEST_NAME, "Se ha rellenado el formulario y se ha creado el sprint pero no aparece en la tabla de sprints", ExceptionUtils.getStackTrace(e),
+                        firefoxDriver);
 
                 e.printStackTrace();
                 return e.toString() + "\nERROR. Se ha rellenado el formulario y se ha creado el sprint pero no aparece en la tabla de sprints";
             }
 
-            logger.log(Status.PASS, "Se ha creado un sprint con los valores obligatorios");
-            extent.flush();
+            Report.testPassed(TEST_ID, TEST_NAME, "Se ha creado un sprint con los valores obligatorios");
 
             return "Test OK. Se ha creado un sprint con los valores minimos para proceder";
         } catch (Exception e)
         {
-
-            logger.log(Status.FAIL, "No se ha podido crear el sprint con los valores obligatorios");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
+            Report.testFailed(TEST_NAME, "No se ha podido crear el sprint con los valores obligatorios", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
             e.printStackTrace();
             return e.toString() + "\nERROR. No se ha podido crear el sprint";

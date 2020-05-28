@@ -4,6 +4,7 @@ import Login.LoginWorki;
 import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Report;
+import Utils.TestOPasoPrevio;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
@@ -24,11 +25,10 @@ import java.util.List;
 
 public class DeleteUTTypeCheckAlert extends TestWithConfig {
 
-    NewUTTypeByDefault newUTTypeByDefaultTest = new NewUTTypeByDefault(commonIni);
+    static final String TEST_ID = "deleteUTType";
+    static final String TEST_NAME = "Borra un tipo de Ut y comprueba que aparece la alerta de seguridad";
 
-    Report myReport;
-    ExtentHtmlReporter reporter;
-    ExtentReports extent;
+    NewUTTypeByDefault newUTTypeByDefaultTest = new NewUTTypeByDefault(commonIni);
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -69,12 +69,6 @@ public class DeleteUTTypeCheckAlert extends TestWithConfig {
 
     public String deleteUTTypeCheckAlert() throws IOException, InterruptedException {
 
-        myReport = Report.getMyReporter();
-        reporter = myReport.getExtentHtmlReporter();
-        extent = myReport.getExtentReports();
-
-        ExtentTest logger = extent.createTest("Borra un tipo de Ut y comprueba que aparece la alerta de seguridad");
-
         try {
             Utils.goToUTType(firefoxDriver, firefoxWaiting);
             firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type by default')]/preceding-sibling::td//button[@class = 'tn-button--dropdown']")));
@@ -92,26 +86,18 @@ public class DeleteUTTypeCheckAlert extends TestWithConfig {
                 yesButton.click();
             } catch(Exception e)
             {
-
-                logger.log(Status.FAIL, "No aparece el mensaje de alerta de borrado de tipo");
-                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-                extent.flush();
+                Report.testFailed(TEST_NAME, "No aparece el mensaje de alerta de borrado de tipo", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
                 e.printStackTrace();
                 return e.toString() + "\nERROR. No aparece el mensaje de confirmación de borrado de tipo";
             }
 
-            logger.log(Status.PASS, "El borrado de tipos funciona correctamente");
-            extent.flush();
+            Report.testPassed(TEST_ID, TEST_NAME, "El borrado de tipos funciona correctamente");
 
             return "Test OK. El borrado de tipos funciona correctamente";
         } catch (Exception e) {
 
-            logger.log(Status.FAIL, "Ha habido un problema al intentar borrar el tipo de UT");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
+            Report.testFailed(TEST_NAME, "Ha habido un problema al intentar borrar el tipo de UT", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
             e.printStackTrace();
             return e.toString() + "\nERROR. Excepcion inesperada";

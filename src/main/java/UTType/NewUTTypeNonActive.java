@@ -6,6 +6,7 @@ import Utils.TestWithConfig;
 import Utils.Utils;
 import Utils.MyFirefoxDriver;
 import Utils.Report;
+import Utils.TestOPasoPrevio;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
@@ -27,11 +28,10 @@ import java.util.List;
 
 public class NewUTTypeNonActive extends TestWithConfig {
 
-    LoginWorki loginWorkiTest = new LoginWorki(commonIni);
+    static final String TEST_ID = "newUTTypeNonActive";
+    static final String TEST_NAME = "Crea un nuevo tipo de UT marcandolo como No Activo";
 
-    Report myReport;
-    ExtentHtmlReporter reporter;
-    ExtentReports extent;
+    LoginWorki loginWorkiTest = new LoginWorki(commonIni);
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -70,19 +70,10 @@ public class NewUTTypeNonActive extends TestWithConfig {
         } catch (Exception e) {
             e.printStackTrace();
             return results;
-        } finally {
-            firefoxDriver.close();
         }
-
     }
 
     public String newUTTypenonActive() throws IOException, InterruptedException {
-
-        myReport = Report.getMyReporter();
-        reporter = myReport.getExtentHtmlReporter();
-        extent = myReport.getExtentReports();
-
-        ExtentTest logger = extent.createTest("Crea un nuevo tipo de UT marcandolo como No Activo");
 
         try{
             Utils.goToUTType(firefoxDriver, firefoxWaiting);
@@ -106,10 +97,8 @@ public class NewUTTypeNonActive extends TestWithConfig {
             try{
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type non active')]")));
 
-                logger.log(Status.FAIL, "El tipo de UT no activo aparece en la vista de tipos de UT activos");
-                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-                logger.fail("", MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-                extent.flush();
+                Report.testFailed(TEST_NAME, "El tipo de UT no activo aparece en la vista de tipos de UT activos",
+                        "El tipo de UT no activo aparece en la vista de tipos de UT activos", firefoxDriver);
 
                 return "ERROR. The non active UT type appears on the actives UT types view";
             } catch (Exception e) {
@@ -118,16 +107,11 @@ public class NewUTTypeNonActive extends TestWithConfig {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type non active')]")));
             }
 
-            logger.log(Status.PASS, "Se ha creado un nuevo tipo de UT no activo");
-            extent.flush();
+            Report.testPassed(TEST_ID, TEST_NAME, "Se ha creado un nuevo tipo de UT no activo");
 
             return "Test OK. Se ha creado un nuevo tipo de UT no activo";
         } catch(Exception e) {
-
-            logger.log(Status.FAIL, "No se ha podido crear un nuevo tipo de UT no activo");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
+            Report.testFailed(TEST_NAME,"No se ha podido crear un nuevo tipo de UT no activo", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
             e.printStackTrace();
             return e.toString() + "\nERROR. No se ha podido crear un nuevo tipo de UT no activo";

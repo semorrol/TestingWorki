@@ -5,6 +5,7 @@ import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Report;
 import Utils.Utils;
+import Utils.TestOPasoPrevio;
 import Workflow.NewWorkflowConLinea;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -26,12 +27,11 @@ import java.util.List;
 
 public class NewUTyNueva extends TestWithConfig {
 
+    static final String TEST_ID = "newUTYNueva";
+    static final String TEST_NAME = "Crea una nueva UT y pulsa en Crear y Nueva para comprobar que aparece el formulario de nuevo";
+
     NewWorkflowConLinea newWorkflowConLineaTest = new NewWorkflowConLinea(commonIni);
     NewUTTypeConLinea newUTTypeConLineaTest = new NewUTTypeConLinea(commonIni);
-
-    Report myReport;
-    ExtentHtmlReporter reporter;
-    ExtentReports extent;
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -73,13 +73,6 @@ public class NewUTyNueva extends TestWithConfig {
 
     private String newUT() throws IOException, InterruptedException {
 
-        myReport = Report.getMyReporter();
-        reporter = myReport.getExtentHtmlReporter();
-        extent = myReport.getExtentReports();
-
-
-        ExtentTest logger = extent.createTest("Crea una nueva UT y pulsa en Crear y Nueva para comprobar que aparece el formulario de nuevo");
-
         try
         {
             firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tn-menu/ul/li[5]/a")));
@@ -106,27 +99,18 @@ public class NewUTyNueva extends TestWithConfig {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Nueva Unidad de Trabajo (UT)')]")));
             } catch (Exception e)
             {
-                logger.log(Status.FAIL, "Se ha pulsado en crear y abrir pero no se abre el formulario para crear otra UT");
-                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-                extent.flush();
-
+                Report.testFailed(TEST_NAME, "Se ha pulsado en crear y abrir pero no se abre el formulario para crear otra UT", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
                 e.printStackTrace();
                 return e.toString() + "\nERROR. Se ha pulsado en crear y abrir pero no se abre el formulario de crear otra";
             }
 
-            logger.log(Status.PASS, "Se ha creado la UT y se ha comprobado que se abre el formulario al pulsar en crear y abrir");
-            extent.flush();
+            Report.testPassed(TEST_ID, TEST_NAME, "Se ha creado la UT y se ha comprobado que se abre el formulario al pulsar en crear y abrir");
 
             return "Test OK. Se ha creado una unidad de trabajo (UT) y se ha comprobado que se abre el formulario al pulsar en crear y nueva";
         } catch (Exception e)
         {
-            logger.log(Status.FAIL, "No se ha crear la unidad de trabajo");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
-
+            Report.testFailed(TEST_NAME, "No se ha podido crear la unidad de trabajo", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
             e.printStackTrace();
             return e.toString() + "\nERROR. No se ha podido crear la unidad de trabajo";

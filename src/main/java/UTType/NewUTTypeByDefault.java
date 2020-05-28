@@ -4,6 +4,7 @@ import Login.LoginWorki;
 import Utils.TestWithConfig;
 import Utils.Utils;
 import Utils.Report;
+import Utils.TestOPasoPrevio;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
@@ -26,11 +27,10 @@ import java.util.List;
 
 public class NewUTTypeByDefault extends TestWithConfig {
 
-    LoginWorki loginWorkiTest = new LoginWorki(commonIni);
+    static final String TEST_ID = "newUTTypeByDefault";
+    static final String TEST_NAME = "Crea un nuevo tipo de UT con los valores por defecto";
 
-    Report myReport;
-    ExtentHtmlReporter reporter;
-    ExtentReports extent;
+    LoginWorki loginWorkiTest = new LoginWorki(commonIni);
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -70,12 +70,6 @@ public class NewUTTypeByDefault extends TestWithConfig {
     }
 
     public String newUTTYpeByDefault() throws IOException, InterruptedException {
-        myReport = Report.getMyReporter();
-        reporter = myReport.getExtentHtmlReporter();
-        extent = myReport.getExtentReports();
-
-
-        ExtentTest logger = extent.createTest("Crea un nuevo tipo de UT con los valores por defecto");
 
         try{
             //Este metodo hace los pasos necesarios para crear un nuevo tipo de UT, a partir de ahi se configuran los parametros
@@ -96,16 +90,12 @@ public class NewUTTypeByDefault extends TestWithConfig {
             //Comprueba que se ha creado el tipo de ut
             firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type by default')]")));
 
-            logger.log(Status.PASS, "Se ha creado el tipo de UT con los valores por defecto");
-            extent.flush();
+            Report.testPassed(TEST_ID, TEST_NAME, "Se ha creado el tipo de UT con los valores por defecto");
 
             return "Test OK. A new UT type by default was created";
         } catch(Exception e){
 
-            logger.log(Status.FAIL, "No se ha podido crear el tipo de UT con los valores por defecto");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
+            Report.testFailed(TEST_NAME, "No se ha podido crear el tipo de UT con los valores por defecto", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
             e.printStackTrace();
             return e.toString() + "\nERROR. A new UT type by default could not be created";

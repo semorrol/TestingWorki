@@ -117,6 +117,7 @@ public class Utils {
     }
 
     public static String takeScreenshot(WebDriver driver) throws IOException, InterruptedException {
+        Thread.sleep(1000);
         TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
         File src = takesScreenshot.getScreenshotAs(OutputType.FILE);
 

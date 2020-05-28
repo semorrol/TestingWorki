@@ -5,6 +5,7 @@ import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Utils;
 import Utils.Report;
+import Utils.TestOPasoPrevio;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
@@ -24,12 +25,10 @@ import java.util.List;
 
 public class NewLineaDeTrabajo extends TestWithConfig {
 
+    static final String TEST_ID = "newLineaTrabajo";
+    static final String TEST_NAME = "Crea una linea de trabajo vacia";
+
     LoginWorki loginWorkiTest = new LoginWorki(commonIni);
-
-    Report myReport;
-    ExtentHtmlReporter reporter;
-    ExtentReports extent;
-
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -71,13 +70,6 @@ public class NewLineaDeTrabajo extends TestWithConfig {
     }
 
     private String crearLineaTrabajo() throws IOException, InterruptedException {
-        myReport = Report.getMyReporter();
-        reporter = myReport.getExtentHtmlReporter();
-        extent = myReport.getExtentReports();
-
-
-        ExtentTest logger = extent.createTest("Crea una linea de trabajo vacia");
-
 
         try
         {
@@ -99,28 +91,19 @@ public class NewLineaDeTrabajo extends TestWithConfig {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'Linea de trabajo selenium')]")));
             } catch (Exception e)
             {
-                logger.log(Status.FAIL, "La linea de trabajo no aparece en la tabla");
-                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-                extent.flush();
 
+                Report.testFailed(TEST_NAME, "La linea de trabajo no aparece en la tabla", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
                 e.printStackTrace();
                 return e.toString() + "\nERROR. No se ha podido crear la linea de trabajo";
             }
 
-            logger.log(Status.PASS, "Se ha creado una linea de trabajo");
-            extent.flush();
-
+            Report.testPassed(TEST_ID, TEST_NAME, "Se ha creado una linea de trabajo");
 
             return "Test OK. Se ha creado una linea de trabajo sin colaboradores ni workflow";
         } catch (Exception e)
         {
-            logger.log(Status.FAIL, "No se ha podido crear una linea de trabajo");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
-
+            Report.testFailed(TEST_NAME, "No se ha podido crear una linea de trabajo", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
             e.printStackTrace();
             return e.toString() + "\nERROR. No se ha podido crear la linea de trabajo";

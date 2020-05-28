@@ -5,6 +5,7 @@ import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Utils;
 import Utils.Report;
+import Utils.TestOPasoPrevio;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
@@ -27,13 +28,12 @@ import java.util.List;
 
 public class EditUTTypeAddingImage extends TestWithConfig {
 
+    static final String TEST_ID = "editUTTypeAddingImage";
+    static final String TEST_NAME = "Edita un tipo de UT añadiendole una imagen";
+
     NewUTTypeByDefault newUTTypeByDefaultTest = new NewUTTypeByDefault(commonIni);
 
     private String imagePath;
-
-    Report myReport;
-    ExtentHtmlReporter reporter;
-    ExtentReports extent;
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -79,12 +79,6 @@ public class EditUTTypeAddingImage extends TestWithConfig {
 
     private String editUTTypeAddingImage() throws IOException, InterruptedException {
 
-        myReport = Report.getMyReporter();
-        reporter = myReport.getExtentHtmlReporter();
-        extent = myReport.getExtentReports();
-
-        ExtentTest logger = extent.createTest("Edita un tipo de UT añadiendole una imagen");
-
         try{
             Utils.goToUTType(firefoxDriver, firefoxWaiting);
 
@@ -104,36 +98,26 @@ public class EditUTTypeAddingImage extends TestWithConfig {
             WebElement saveButton = firefoxDriver.findElement(By.xpath("//span[contains(., 'Guardar')]"));
             saveButton.click();
 
-            try{
+            try
+            {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//img[contains(@src, 'data') and @title = 'UT type by default']")));
-            } catch (Exception e){
-                logger.log(Status.FAIL, "La imagen se subió pero no aparece en la tabla");
-                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-                extent.flush();
-
+            } catch (Exception e)
+            {
+                Report.testFailed(TEST_NAME, "La imagen se subió pero no aparece en la tabla", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
                 e.printStackTrace();
                 return e.toString() + "\nERROR. La imagen se subió pero no aparece en la lista";
             }
 
-            logger.log(Status.PASS, "Se ha añadido una imagen al tipo de UT por defecto y se ha comprobado que aparece");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.pass("La imagen ha cambiado", MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
-
+            Report.testPassedWithScreenshot(TEST_ID, TEST_NAME, "Se ha añadido una imagen al tipo de UT por defecto y se ha comprobado que aparece", firefoxDriver);
 
             return "Test OK. Se ha añadido una imagen al tipo de UT por defecto";
-        } catch(Exception e){
-
-            logger.log(Status.FAIL, "Error inesperado al intentar editar el tipo de UT");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
+        } catch(Exception e)
+        {
+            Report.testFailed(TEST_NAME, "Error inesperado al intentar editar el tipo de UT", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
             e.printStackTrace();
             return e.toString() + "\nERROR. Error inesperado. No se ha podido editar el tipo de ut";
         }
-
     }
 }

@@ -5,6 +5,7 @@ import Utils.MyFirefoxDriver;
 import Utils.TestWithConfig;
 import Utils.Utils;
 import Utils.Report;
+import Utils.TestOPasoPrevio;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
@@ -25,11 +26,10 @@ import java.util.List;
 
 public class EditUTType extends TestWithConfig {
 
-    NewUTTypeByDefault newUTTypeByDefaultTest = new NewUTTypeByDefault(commonIni);
+    static final String TEST_ID = "editUTType";
+    static final String TEST_NAME = "Edita un tipo de UT y comprueba que los valores se actualizan";
 
-    Report myReport;
-    ExtentHtmlReporter reporter;
-    ExtentReports extent;
+    NewUTTypeByDefault newUTTypeByDefaultTest = new NewUTTypeByDefault(commonIni);
 
     MyFirefoxDriver myFirefoxDriver;
     static WebDriver firefoxDriver;
@@ -69,12 +69,6 @@ public class EditUTType extends TestWithConfig {
 
     public String editUTTypeAndCheck() throws IOException, InterruptedException {
 
-        myReport = Report.getMyReporter();
-        reporter = myReport.getExtentHtmlReporter();
-        extent = myReport.getExtentReports();
-
-        ExtentTest logger = extent.createTest("Edita un tipo de UT y comprueba que los valores se actualizan");
-
         try
         {
             Utils.goToUTType(firefoxDriver, firefoxWaiting);
@@ -94,14 +88,12 @@ public class EditUTType extends TestWithConfig {
             WebElement saveButton = firefoxDriver.findElement(By.xpath("//span[contains(., 'Guardar')]"));
             saveButton.click();
 
-            try{
+            try
+            {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td[contains(., 'UT type by default')]/following-sibling::td//input[@type = 'hidden' and @value = 'true']")));
-            } catch(Exception e) {
-
-                logger.log(Status.FAIL, "El tipo de UT ha sido editado pero no se actualiza correctamente en la tabla");
-                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-                extent.flush();
+            } catch(Exception e)
+            {
+                Report.testFailed(TEST_NAME, "El tipo de UT ha sido editado pero no se actualiza correctamente en la tabla", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
                 e.printStackTrace();
                 return e.toString() + "\nERROR. El tipo de UT ha sido editado pero no se actualiza correctamente en la tabla";
@@ -119,28 +111,19 @@ public class EditUTType extends TestWithConfig {
             try {
                 firefoxWaiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(., 'Fallo')]//ancestor::dx-check-box[@aria-checked = 'true']")));
             } catch (Exception e){
-
-                logger.log(Status.FAIL, "El cambio realizado no aparece al volver a entrar al formulario del tipo de UT");
-                String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-                logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-                extent.flush();
+                Report.testFailed(TEST_NAME, "El cambio realizado no aparece al volver a entrar al formulario del tipo de UT", ExceptionUtils.getStackTrace(e),
+                        firefoxDriver);
 
                 e.printStackTrace();
                 return e.toString() + "\nERROR. El cambio realizado no aparece al volver a entrar al formulario del tipo de UT";
             }
 
-            logger.log(Status.PASS, "Se ha editado el tipo de UT y se ha comprobado que cambia en la tabla y en el formulario");
-            extent.flush();
-
+            Report.testPassed(TEST_ID, TEST_NAME, "Se ha editado el tipo de UT y se ha comprobado que cambia en la tabla y en el formulario");
 
             return "Test OK. Se ha editado el tipo de UT y se ha comprobado que cambia en la tabla y en el formulario";
         } catch(Exception e)
         {
-            logger.log(Status.FAIL, "No se ha podido completar la prueba");
-            String screenshotPath = Utils.takeScreenshot(firefoxDriver);
-            logger.fail(ExceptionUtils.getStackTrace(e), MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-            extent.flush();
-
+            Report.testFailed(TEST_NAME, "No se ha podido completar la prueba", ExceptionUtils.getStackTrace(e), firefoxDriver);
 
             e.printStackTrace();
             return e.toString() + "\n ERROR. Excepcion inesperada";
