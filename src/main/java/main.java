@@ -11,12 +11,15 @@ import Utils.*;
 import Workflow.NewWorkflow;
 import Workflow.NewWorkflowConLinea;
 import exceptions.MissingParameterException;
+import org.ini4j.Profile;
 import org.ini4j.Wini;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class main {
 
@@ -43,7 +46,7 @@ public class main {
             Wini commonIni = getConfig(args);
             Map<String, Test> tests = initializeTests(commonIni);
             List<String> testsList = getTestsToRun(commonIni);
-            testOPasoPrevio = new TestOPasoPrevio(testsList); //Se crea el Hashmap para manejar cuando un test se debe añadir al reporte y cuando no
+            testOPasoPrevio = new TestOPasoPrevio(new ArrayList<>(tests.keySet())); //Se crea el Hashmap para manejar cuando un test se debe añadir al reporte y cuando no
             runTests(testsList, tests);
         }
         catch (MissingParameterException e2) {
@@ -86,35 +89,11 @@ public class main {
     {
         Wini commonIni = new Wini(new File(args[0]));
 
-        int otherParamsStart = 1;
-
         //Override or add parameters to commonIni when a second .ini file is passed as argument
-        /*if(args.length > 1 && args[1].contains(".ini"))
+        if(args.length > 1)
         {
-            otherParamsStart = 2;
-            Wini selfIni = new Wini(new File(args[1]));
-            //Get the sections and parameters of the second .ini
-            for(String sectionName : selfIni.keySet())
-            {
-                Profile.Section section = selfIni.get(sectionName);
-                for(String parameterName : section.keySet())
-                {
-                    commonIni.put(sectionName, parameterName, selfIni.get(sectionName, parameterName));
-                }
-            }
+            commonIni.put("General", "testsList", args[1]);
         }
-
-        // Sobreescribir cuando se nos pasan parámetros con el formato Section.Parameter=LoQueSea
-        for (int i = otherParamsStart; i < args.length; i++)
-        {
-            Pattern p = Pattern.compile("(.+)\\.(.+)=(.+)");
-            Matcher m = p.matcher(args[i]);
-            if (m.matches())
-            {
-                System.out.println(m.group(1) + m.group(2) + m.group(3));
-                commonIni.put(m.group(1), m.group(2), m.group(3));
-            }
-        }*/
 
         return commonIni;
     }
